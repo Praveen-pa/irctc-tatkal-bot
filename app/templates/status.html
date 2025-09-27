@@ -1,0 +1,616 @@
+{% extends "base.html" %}
+
+{% block title %}IRCTC Tatkal Bot - Status Monitor{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Main Status Display -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-chart-line"></i> Real-time Booking Status
+                </h4>
+            </div>
+            <div class="card-body">
+                <!-- Current Booking Status -->
+                <div id="current-booking-status" class="text-center mb-4">
+                    <div id="status-icon" class="mb-3">
+                        <i class="fas fa-moon fa-3x text-muted"></i>
+                    </div>
+                    <h5 id="status-title">Bot is Idle</h5>
+                    <p id="status-message" class="text-muted">No active booking process</p>
+                    <small id="status-time" class="text-muted"></small>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div id="progress-container" class="mb-4" style="display: none;">
+                    <label class="form-label">Booking Progress</label>
+                    <div class="progress mb-2">
+                        <div id="progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                             role="progressbar" style="width: 0%"></div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small class="text-muted">Step: <span id="current-step">-</span></small>
+                        <small class="text-muted">Progress: <span id="progress-percentage">0%</span></small>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="text-center">
+                    <button id="start-booking-btn" class="btn btn-success me-2" disabled>
+                        <i class="fas fa-play"></i> Start Booking
+                    </button>
+                    <button id="stop-booking-btn" class="btn btn-danger me-2" style="display: none;">
+                        <i class="fas fa-stop"></i> Stop Booking
+                    </button>
+                    <button id="refresh-status-btn" class="btn btn-outline-secondary">
+                        <i class="fas fa-refresh"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Live Activity Feed -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-stream"></i> Live Activity Feed
+                </h5>
+            </div>
+            <div class="card-body" style="height: 400px; overflow-y: auto;">
+                <div id="activity-feed">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-info-circle"></i>
+                        <p>Activity updates will appear here during booking</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Information -->
+    <div class="col-lg-4">
+        <!-- System Status -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-server"></i> System Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6 mb-3">
+                        <div class="status-indicator">
+                            <div id="server-status" class="status-dot bg-success"></div>
+                            <small class="d-block">Server</small>
+                            <small id="server-status-text" class="text-success">Online</small>
+                        </div>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <div class="status-indicator">
+                            <div id="irctc-status" class="status-dot bg-success"></div>
+                            <small class="d-block">IRCTC</small>
+                            <small id="irctc-status-text" class="text-success">Accessible</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="status-indicator">
+                            <div id="bot-status" class="status-dot bg-secondary"></div>
+                            <small class="d-block">Bot</small>
+                            <small id="bot-status-text" class="text-muted">Idle</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="status-indicator">
+                            <div id="connection-status" class="status-dot bg-primary"></div>
+                            <small class="d-block">Connection</small>
+                            <small id="connection-status-text" class="text-primary">Connected</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Performance Metrics -->
+        <div class="card shadow-sm mt-3">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-tachometer-alt"></i> Performance
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- CPU Usage -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <small>CPU Usage</small>
+                        <small id="cpu-usage">0%</small>
+                    </div>
+                    <div class="progress progress-sm">
+                        <div id="cpu-progress" class="progress-bar bg-info" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <!-- Memory Usage -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <small>Memory Usage</small>
+                        <small id="memory-usage">0%</small>
+                    </div>
+                    <div class="progress progress-sm">
+                        <div id="memory-progress" class="progress-bar bg-warning" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <!-- Connected Clients -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <small>Connected Clients</small>
+                        <small id="connected-clients">1</small>
+                    </div>
+                </div>
+                
+                <!-- Last Update -->
+                <div>
+                    <div class="d-flex justify-content-between">
+                        <small>Last Update</small>
+                        <small id="last-update">-</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Scheduled Bookings -->
+        <div class="card shadow-sm mt-3">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-calendar-check"></i> Scheduled Bookings
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="scheduled-bookings-list">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-calendar-times"></i>
+                        <p class="mb-0">No scheduled bookings</p>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <button id="refresh-scheduled-btn" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-refresh"></i> Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="card shadow-sm mt-3">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-bolt"></i> Quick Actions
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button id="go-to-booking" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> New Booking
+                    </button>
+                    <button id="view-settings" class="btn btn-secondary btn-sm">
+                        <i class="fas fa-cog"></i> Settings
+                    </button>
+                    <button id="download-logs" class="btn btn-info btn-sm">
+                        <i class="fas fa-download"></i> Download Logs
+                    </button>
+                    <button id="clear-activity" class="btn btn-warning btn-sm">
+                        <i class="fas fa-trash"></i> Clear Activity
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Details Modal -->
+<div class="modal fade" id="bookingDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-info-circle"></i> Booking Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="booking-details-content">
+                    <!-- Booking details will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Activity Item Template -->
+<template id="activity-template">
+    <div class="activity-item border-start border-3 ps-3 mb-3">
+        <div class="d-flex justify-content-between">
+            <span class="activity-icon me-2"></span>
+            <small class="activity-time text-muted"></small>
+        </div>
+        <h6 class="activity-title mb-1"></h6>
+        <p class="activity-message mb-0"></p>
+    </div>
+</template>
+
+<!-- Scheduled Booking Item Template -->
+<template id="scheduled-booking-template">
+    <div class="scheduled-booking-item mb-3 p-2 border rounded">
+        <div class="d-flex justify-content-between align-items-start">
+            <div class="flex-grow-1">
+                <h6 class="booking-route mb-1"></h6>
+                <small class="booking-details text-muted"></small>
+                <br>
+                <small class="booking-time text-info"></small>
+            </div>
+            <div class="booking-actions">
+                <button class="btn btn-danger btn-sm cancel-booking">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/status.js') }}"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize status monitoring
+    initStatusMonitoring();
+    
+    // Setup event listeners
+    setupEventListeners();
+    
+    // Start periodic updates
+    startPeriodicUpdates();
+    
+    // Load initial data
+    loadScheduledBookings();
+});
+
+function initStatusMonitoring() {
+    // Connect to WebSocket if not already connected
+    if (!window.webSocketClient) {
+        window.webSocketClient = new WebSocketClient();
+    }
+    
+    // Listen for booking status updates
+    webSocketClient.socket.on('booking_status', handleBookingStatusUpdate);
+    webSocketClient.socket.on('live_update', handleLiveUpdate);
+    webSocketClient.socket.on('system_status', handleSystemStatusUpdate);
+}
+
+function setupEventListeners() {
+    // Action buttons
+    document.getElementById('start-booking-btn').addEventListener('click', () => {
+        window.location.href = '/';
+    });
+    
+    document.getElementById('stop-booking-btn').addEventListener('click', stopBooking);
+    document.getElementById('refresh-status-btn').addEventListener('click', refreshStatus);
+    document.getElementById('refresh-scheduled-btn').addEventListener('click', loadScheduledBookings);
+    
+    // Quick actions
+    document.getElementById('go-to-booking').addEventListener('click', () => {
+        window.location.href = '/';
+    });
+    
+    document.getElementById('view-settings').addEventListener('click', () => {
+        window.location.href = '/config';
+    });
+    
+    document.getElementById('download-logs').addEventListener('click', downloadLogs);
+    document.getElementById('clear-activity').addEventListener('click', clearActivityFeed);
+}
+
+function handleBookingStatusUpdate(data) {
+    updateBookingStatus(data);
+    updateProgressBar(data);
+}
+
+function handleLiveUpdate(data) {
+    addActivityItem(data);
+}
+
+function handleSystemStatusUpdate(data) {
+    updateSystemStatus(data);
+    updatePerformanceMetrics(data);
+}
+
+function updateBookingStatus(data) {
+    const statusIcon = document.getElementById('status-icon');
+    const statusTitle = document.getElementById('status-title');
+    const statusMessage = document.getElementById('status-message');
+    const statusTime = document.getElementById('status-time');
+    
+    // Update icon based on status
+    let iconClass = 'fas fa-moon fa-3x text-muted';
+    let titleText = 'Bot is Idle';
+    
+    if (data.is_running) {
+        iconClass = 'fas fa-cog fa-3x text-primary fa-spin';
+        titleText = 'Booking in Progress';
+    }
+    
+    statusIcon.innerHTML = `<i class="${iconClass}"></i>`;
+    statusTitle.textContent = titleText;
+    statusMessage.textContent = data.message || 'No active booking process';
+    statusTime.textContent = data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : '';
+    
+    // Update action buttons
+    const startBtn = document.getElementById('start-booking-btn');
+    const stopBtn = document.getElementById('stop-booking-btn');
+    
+    if (data.is_running) {
+        startBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-block';
+    } else {
+        startBtn.style.display = 'inline-block';
+        stopBtn.style.display = 'none';
+    }
+}
+
+function updateProgressBar(data) {
+    const progressContainer = document.getElementById('progress-container');
+    const progressBar = document.getElementById('progress-bar');
+    const currentStep = document.getElementById('current-step');
+    const progressPercentage = document.getElementById('progress-percentage');
+    
+    if (data.is_running && data.progress !== undefined) {
+        progressContainer.style.display = 'block';
+        progressBar.style.width = `${data.progress}%`;
+        progressBar.setAttribute('aria-valuenow', data.progress);
+        progressPercentage.textContent = `${data.progress}%`;
+        currentStep.textContent = data.current_step || 'Unknown';
+    } else {
+        progressContainer.style.display = 'none';
+    }
+}
+
+function addActivityItem(data) {
+    const activityFeed = document.getElementById('activity-feed');
+    const template = document.getElementById('activity-template');
+    
+    // Remove "no activity" message if present
+    const noActivity = activityFeed.querySelector('.text-muted');
+    if (noActivity && noActivity.textContent.includes('Activity updates')) {
+        noActivity.remove();
+    }
+    
+    // Clone template
+    const item = template.content.cloneNode(true);
+    
+    // Populate data
+    const icon = item.querySelector('.activity-icon');
+    const time = item.querySelector('.activity-time');
+    const title = item.querySelector('.activity-title');
+    const message = item.querySelector('.activity-message');
+    
+    // Set icon based on type
+    let iconClass = 'fas fa-info-circle text-info';
+    if (data.type === 'error') iconClass = 'fas fa-exclamation-triangle text-danger';
+    if (data.type === 'success') iconClass = 'fas fa-check-circle text-success';
+    if (data.type === 'warning') iconClass = 'fas fa-exclamation-circle text-warning';
+    
+    icon.innerHTML = `<i class="${iconClass}"></i>`;
+    time.textContent = new Date(data.timestamp).toLocaleTimeString();
+    title.textContent = data.step || 'Update';
+    message.textContent = data.message || '';
+    
+    // Add to feed (newest first)
+    activityFeed.insertBefore(item, activityFeed.firstChild);
+    
+    // Limit to 50 items
+    const items = activityFeed.querySelectorAll('.activity-item');
+    if (items.length > 50) {
+        items[items.length - 1].remove();
+    }
+}
+
+function updateSystemStatus(data) {
+    const statusElements = {
+        'server': document.getElementById('server-status'),
+        'irctc': document.getElementById('irctc-status'),
+        'bot': document.getElementById('bot-status')
+    };
+    
+    const statusTexts = {
+        'server': document.getElementById('server-status-text'),
+        'irctc': document.getElementById('irctc-status-text'),
+        'bot': document.getElementById('bot-status-text')
+    };
+    
+    Object.keys(statusElements).forEach(key => {
+        if (data[key] && statusElements[key]) {
+            const status = data[key];
+            let className = 'status-dot bg-';
+            let textClass = 'text-';
+            let textContent = status;
+            
+            if (status === 'healthy' || status === 'online') {
+                className += 'success';
+                textClass += 'success';
+                textContent = 'Online';
+            } else if (status === 'degraded' || status === 'warning') {
+                className += 'warning';
+                textClass += 'warning';
+                textContent = 'Warning';
+            } else if (status === 'unhealthy' || status === 'error') {
+                className += 'danger';
+                textClass += 'danger';
+                textContent = 'Error';
+            } else {
+                className += 'secondary';
+                textClass += 'muted';
+            }
+            
+            statusElements[key].className = className;
+            if (statusTexts[key]) {
+                statusTexts[key].className = textClass;
+                statusTexts[key].textContent = textContent;
+            }
+        }
+    });
+}
+
+function updatePerformanceMetrics(data) {
+    if (data.cpu_usage !== undefined) {
+        document.getElementById('cpu-usage').textContent = `${Math.round(data.cpu_usage)}%`;
+        document.getElementById('cpu-progress').style.width = `${data.cpu_usage}%`;
+    }
+    
+    if (data.memory_usage !== undefined) {
+        document.getElementById('memory-usage').textContent = `${Math.round(data.memory_usage)}%`;
+        document.getElementById('memory-progress').style.width = `${data.memory_usage}%`;
+    }
+    
+    if (data.connected_clients !== undefined) {
+        document.getElementById('connected-clients').textContent = data.connected_clients;
+    }
+    
+    document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+}
+
+function stopBooking() {
+    if (webSocketClient) {
+        webSocketClient.socket.emit('stop_booking');
+    }
+}
+
+function refreshStatus() {
+    if (webSocketClient) {
+        webSocketClient.socket.emit('get_status');
+    }
+}
+
+function loadScheduledBookings() {
+    fetch('/api/scheduled_bookings')
+        .then(response => response.json())
+        .then(data => {
+            displayScheduledBookings(data.scheduled_bookings || {});
+        })
+        .catch(error => {
+            console.error('Error loading scheduled bookings:', error);
+        });
+}
+
+function displayScheduledBookings(bookings) {
+    const container = document.getElementById('scheduled-bookings-list');
+    const template = document.getElementById('scheduled-booking-template');
+    
+    // Clear existing items
+    container.innerHTML = '';
+    
+    if (Object.keys(bookings).length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-muted">
+                <i class="fas fa-calendar-times"></i>
+                <p class="mb-0">No scheduled bookings</p>
+            </div>
+        `;
+        return;
+    }
+    
+    Object.entries(bookings).forEach(([jobId, booking]) => {
+        const item = template.content.cloneNode(true);
+        
+        item.querySelector('.booking-route').textContent = 
+            `${booking.from_station} → ${booking.to_station}`;
+        item.querySelector('.booking-details').textContent = 
+            `${booking.travel_class} | ${booking.journey_date}`;
+        item.querySelector('.booking-time').textContent = 
+            `Scheduled: ${new Date(booking.scheduled_time).toLocaleString()}`;
+        
+        const cancelBtn = item.querySelector('.cancel-booking');
+        cancelBtn.addEventListener('click', () => cancelScheduledBooking(jobId));
+        
+        container.appendChild(item);
+    });
+}
+
+function cancelScheduledBooking(jobId) {
+    if (confirm('Are you sure you want to cancel this scheduled booking?')) {
+        fetch('/api/cancel_scheduled_booking', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ job_id: jobId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'cancelled') {
+                showToast('Booking cancelled successfully', 'success');
+                loadScheduledBookings();
+            } else {
+                showToast('Failed to cancel booking', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error cancelling booking:', error);
+            showToast('Error cancelling booking', 'error');
+        });
+    }
+}
+
+function downloadLogs() {
+    // This would download application logs
+    showToast('Log download feature coming soon', 'info');
+}
+
+function clearActivityFeed() {
+    if (confirm('Clear all activity history?')) {
+        const activityFeed = document.getElementById('activity-feed');
+        activityFeed.innerHTML = `
+            <div class="text-center text-muted">
+                <i class="fas fa-info-circle"></i>
+                <p>Activity updates will appear here during booking</p>
+            </div>
+        `;
+    }
+}
+
+function startPeriodicUpdates() {
+    // Request status updates every 30 seconds
+    setInterval(() => {
+        if (webSocketClient && webSocketClient.isConnectedToServer()) {
+            webSocketClient.socket.emit('get_status');
+        }
+    }, 30000);
+}
+
+function showToast(message, type = 'info') {
+    // Simple toast notification
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 5000);
+}
+</script>
+{% endblock %}

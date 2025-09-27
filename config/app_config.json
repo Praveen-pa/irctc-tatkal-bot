@@ -1,0 +1,84 @@
+{
+  "version": "1.0.0",
+  "name": "IRCTC Tatkal Automation Bot",
+  "description": "Fast, reliable, and secure Tatkal ticket booking automation",
+  "environment": "production",
+  "features": {
+    "web_interface": true,
+    "scheduled_booking": true,
+    "real_time_updates": true,
+    "encrypted_storage": true,
+    "mobile_responsive": true,
+    "captcha_handling": true,
+    "otp_support": true,
+    "upi_payment": true
+  },
+  "timing": {
+    "tatkal_ac_time": "10:00",
+    "tatkal_non_ac_time": "11:00",
+    "ntp_sync_enabled": true,
+    "timezone": "Asia/Kolkata"
+  },
+  "security": {
+    "encryption_enabled": true,
+    "secure_sessions": true,
+    "input_validation": true,
+    "csrf_protection": true,
+    "rate_limiting": true
+  },
+  "performance": {
+    "headless_browser": true,
+    "request_optimization": true,
+    "memory_management": true,
+    "connection_pooling": true
+  },
+  "deployment": {
+    "docker_support": true,
+    "aws_optimized": true,
+    "cloud_ready": true,
+    "ssl_support": true,
+    "load_balancing": false
+  },
+  "monitoring": {
+    "health_checks": true,
+    "performance_metrics": true,
+    "error_tracking": true,
+    "audit_logging": true
+  },
+  "supported_classes": [
+    "1A",
+    "2A", 
+    "3A",
+    "SL",
+    "CC",
+    "2S",
+    "EC"
+  ],
+  "supported_payment_gateways": [
+    "GOOGLEPAY",
+    "PHONEPE", 
+    "PAYTM",
+    "BHIM",
+    "UPI"
+  ],
+  "limits": {
+    "max_passengers": 6,
+    "max_concurrent_bookings": 3,
+    "booking_timeout_minutes": 10,
+    "retry_attempts": 3
+  },
+  "regional_optimization": {
+    "india_focused": true,
+    "mumbai_servers": true,
+    "irctc_optimized": true,
+    "indian_payment_methods": true
+  },
+  "compliance": {
+    "manual_captcha": true,
+    "manual_otp": true,
+    "manual_payment": true,
+    "no_policy_violations": true,
+    "personal_use_only": true
+  },
+  "last_updated": "2025-09-26"
+}

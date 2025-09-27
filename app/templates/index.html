@@ -1,0 +1,383 @@
+{% extends "base.html" %}
+
+{% block title %}IRCTC Tatkal Bot - Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Left Column - Booking Form -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-ticket-alt"></i> Tatkal Booking Configuration
+                </h4>
+            </div>
+            <div class="card-body">
+                <form id="booking-form">
+                    <!-- Journey Details -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary">
+                                <i class="fas fa-route"></i> Journey Details
+                            </h5>
+                            <hr>
+                        </div>
+                        
+                        <!-- From Station -->
+                        <div class="col-md-6 mb-3">
+                            <label for="from-station" class="form-label">From Station *</label>
+                            <input type="text" class="form-control" id="from-station" name="from_station" 
+                                   placeholder="Enter source station" list="stations-list" required>
+                            <datalist id="stations-list">
+                                <option value="NEW DELHI - NDLS">
+                                <option value="MUMBAI CENTRAL - BCT">
+                                <option value="CHENNAI CENTRAL - MAS">
+                                <option value="KOLKATA - KOAA">
+                                <option value="BANGALORE CITY - SBC">
+                                <option value="HYDERABAD DECAN - HYB">
+                                <option value="AHMEDABAD JN - ADI">
+                                <option value="PUNE JN - PUNE">
+                            </datalist>
+                        </div>
+                        
+                        <!-- To Station -->
+                        <div class="col-md-6 mb-3">
+                            <label for="to-station" class="form-label">To Station *</label>
+                            <input type="text" class="form-control" id="to-station" name="to_station" 
+                                   placeholder="Enter destination station" list="stations-list" required>
+                        </div>
+                        
+                        <!-- Journey Date -->
+                        <div class="col-md-6 mb-3">
+                            <label for="journey-date" class="form-label">Journey Date *</label>
+                            <input type="date" class="form-control" id="journey-date" name="journey_date" 
+                                   min="" required>
+                        </div>
+                        
+                        <!-- Travel Class -->
+                        <div class="col-md-6 mb-3">
+                            <label for="travel-class" class="form-label">Travel Class *</label>
+                            <select class="form-select" id="travel-class" name="travel_class" required>
+                                <option value="">Select Class</option>
+                                <option value="1A">First AC (1A)</option>
+                                <option value="2A">Second AC (2A)</option>
+                                <option value="3A">Third AC (3A)</option>
+                                <option value="SL">Sleeper (SL)</option>
+                                <option value="CC">Chair Car (CC)</option>
+                                <option value="2S">Second Sitting (2S)</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Train Number (Optional) -->
+                        <div class="col-md-6 mb-3">
+                            <label for="train-number" class="form-label">Preferred Train Number (Optional)</label>
+                            <input type="text" class="form-control" id="train-number" name="train_number" 
+                                   placeholder="e.g., 12345">
+                        </div>
+                        
+                        <!-- Tatkal Time Display -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tatkal Booking Time</label>
+                            <div class="form-control-plaintext">
+                                <span id="tatkal-time" class="badge bg-info fs-6">
+                                    <i class="fas fa-clock"></i> Select class to see time
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Passengers Section -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary">
+                                <i class="fas fa-users"></i> Passenger Details
+                            </h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="col-12 mb-3">
+                            <button type="button" class="btn btn-outline-primary btn-sm" id="add-passenger">
+                                <i class="fas fa-plus"></i> Add Passenger
+                            </button>
+                        </div>
+                        
+                        <div id="passengers-container" class="col-12">
+                            <!-- Passenger forms will be added dynamically -->
+                        </div>
+                    </div>
+                    
+                    <!-- Login Credentials -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary">
+                                <i class="fas fa-lock"></i> IRCTC Login Details
+                            </h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="username" class="form-label">IRCTC Username *</label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   placeholder="Your IRCTC username" required>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="password" class="form-label">IRCTC Password *</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" 
+                                       placeholder="Your IRCTC password" required>
+                                <button class="btn btn-outline-secondary" type="button" id="toggle-password">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Details -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary">
+                                <i class="fas fa-credit-card"></i> Payment Preferences
+                            </h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="upi-id" class="form-label">UPI ID (Optional)</label>
+                            <input type="text" class="form-control" id="upi-id" name="upi_id" 
+                                   placeholder="yourname@upi">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="upi-gateway" class="form-label">Preferred UPI Gateway</label>
+                            <select class="form-select" id="upi-gateway" name="upi_gateway">
+                                <option value="">Select Gateway (Manual choice during payment)</option>
+                                <option value="GOOGLEPAY">Google Pay</option>
+                                <option value="PHONEPE">PhonePe</option>
+                                <option value="PAYTM">Paytm</option>
+                                <option value="BHIM">BHIM UPI</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Options -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary">
+                                <i class="fas fa-cogs"></i> Additional Options
+                            </h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="auto-upgrade" name="auto_upgrade">
+                                <label class="form-check-label" for="auto-upgrade">
+                                    Consider Auto Upgradation
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="travel-insurance" name="travel_insurance">
+                                <label class="form-check-label" for="travel-insurance">
+                                    Travel Insurance (₹0.35 per passenger)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                <button type="button" class="btn btn-outline-secondary me-md-2" id="save-config">
+                                    <i class="fas fa-save"></i> Save Configuration
+                                </button>
+                                <button type="button" class="btn btn-warning me-md-2" id="schedule-booking">
+                                    <i class="fas fa-calendar-alt"></i> Schedule for Tatkal Time
+                                </button>
+                                <button type="button" class="btn btn-success" id="start-booking">
+                                    <i class="fas fa-rocket"></i> Start Booking Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Right Column - Status and Information -->
+    <div class="col-lg-4">
+        <!-- Current Status -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle"></i> Current Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="current-status">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-moon fa-2x mb-2"></i>
+                        <p>Bot is idle. Configure booking details and start.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Real-time Updates -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-broadcast-tower"></i> Live Updates
+                </h5>
+            </div>
+            <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                <div id="live-updates">
+                    <div class="text-muted text-center">
+                        <small>Updates will appear here during booking</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Tips -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-lightbulb"></i> Quick Tips
+                </h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i>
+                        <small>AC classes open at 10:00 AM, Non-AC at 11:00 AM</small>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i>
+                        <small>Keep your mobile ready for OTP and payment</small>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i>
+                        <small>Bot will pause for captcha and OTP entry</small>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check text-success"></i>
+                        <small>All credentials are encrypted and secure</small>
+                    </li>
+                    <li>
+                        <i class="fas fa-check text-success"></i>
+                        <small>Works on mobile, tablet, and desktop</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- System Status -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-server"></i> System Status
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="status-indicator">
+                            <div id="server-status" class="status-dot bg-success"></div>
+                            <small class="d-block">Server</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="status-indicator">
+                            <div id="irctc-status" class="status-dot bg-success"></div>
+                            <small class="d-block">IRCTC</small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="status-indicator">
+                            <div id="bot-status" class="status-dot bg-secondary"></div>
+                            <small class="d-block">Bot</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Passenger Template (Hidden) -->
+<template id="passenger-template">
+    <div class="passenger-form border rounded p-3 mb-3 position-relative">
+        <button type="button" class="btn-close position-absolute top-0 end-0 mt-2 me-2" 
+                aria-label="Remove passenger"></button>
+        
+        <h6 class="text-primary mb-3">
+            <i class="fas fa-user"></i> Passenger <span class="passenger-number"></span>
+        </h6>
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Name *</label>
+                <input type="text" class="form-control passenger-name" name="passenger_name" 
+                       placeholder="Full name as per ID" required>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Age *</label>
+                <input type="number" class="form-control passenger-age" name="passenger_age" 
+                       min="1" max="120" placeholder="Age" required>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Gender *</label>
+                <select class="form-select passenger-gender" name="passenger_gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                    <option value="T">Transgender</option>
+                </select>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Berth Preference</label>
+                <select class="form-select passenger-berth" name="passenger_berth">
+                    <option value="">No Preference</option>
+                    <option value="LB">Lower Berth</option>
+                    <option value="MB">Middle Berth</option>
+                    <option value="UB">Upper Berth</option>
+                    <option value="SU">Side Upper</option>
+                    <option value="SL">Side Lower</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</template>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/booking.js') }}"></script>
+
+<script>
+    // Set minimum date to today
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        const journeyDateInput = document.getElementById('journey-date');
+        journeyDateInput.min = tomorrow.toISOString().split('T')[0];
+        
+        // Set default date to tomorrow
+        journeyDateInput.value = tomorrow.toISOString().split('T')[0];
+        
+        // Add first passenger by default
+        addPassenger();
+        
+        // Update Tatkal time when class changes
+        updateTatkalTime();
+    });
+</script>
+{% endblock %}

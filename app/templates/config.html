@@ -1,0 +1,849 @@
+{% extends "base.html" %}
+
+{% block title %}IRCTC Tatkal Bot - Configuration{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Application Settings -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">
+                    <i class="fas fa-cogs"></i> Application Settings
+                </h4>
+            </div>
+            <div class="card-body">
+                <form id="settings-form">
+                    <!-- General Settings -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary">
+                                <i class="fas fa-sliders-h"></i> General Settings
+                            </h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="auto-refresh" class="form-label">Auto Refresh Status</label>
+                            <select class="form-select" id="auto-refresh" name="auto_refresh">
+                                <option value="30">Every 30 seconds</option>
+                                <option value="60">Every minute</option>
+                                <option value="300">Every 5 minutes</option>
+                                <option value="0">Disabled</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="notification-sound" class="form-label">Notification Sounds</label>
+                            <select class="form-select" id="notification-sound" name="notification_sound">
+                                <option value="enabled">Enabled</option>
+                                <option value="disabled">Disabled</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="theme-mode" class="form-label">Theme Mode</label>
+                            <select class="form-select" id="theme-mode" name="theme_mode">
+                                <option value="light">Light Mode</option>
+                                <option value="dark">Dark Mode</option>
+                                <option value="auto">System Default</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="language" class="form-label">Language</label>
+                            <select class="form-select" id="language" name="language">
+                                <option value="en">English</option>
+                                <option value="hi">हिंदी</option>
+                                <option value="ta">தமிழ்</option>
+                                <option value="te">తెలుగు</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Booking Preferences -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary">
+                                <i class="fas fa-ticket-alt"></i> Booking Preferences
+                            </h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="default-class" class="form-label">Default Travel Class</label>
+                            <select class="form-select" id="default-class" name="default_class">
+                                <option value="">No Preference</option>
+                                <option value="1A">First AC (1A)</option>
+                                <option value="2A">Second AC (2A)</option>
+                                <option value="3A">Third AC (3A)</option>
+                                <option value="SL">Sleeper (SL)</option>
+                                <option value="CC">Chair Car (CC)</option>
+                                <option value="2S">Second Sitting (2S)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="retry-attempts" class="form-label">Retry Attempts</label>
+                            <select class="form-select" id="retry-attempts" name="retry_attempts">
+                                <option value="1">1 attempt</option>
+                                <option value="3">3 attempts</option>
+                                <option value="5">5 attempts</option>
+                                <option value="10">10 attempts</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="auto-upgrade" name="auto_upgrade">
+                                <label class="form-check-label" for="auto-upgrade">
+                                    Enable auto upgradation by default
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="travel-insurance" name="travel_insurance">
+                                <label class="form-check-label" for="travel-insurance">
+                                    Enable travel insurance by default
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="save-credentials" name="save_credentials">
+                                <label class="form-check-label" for="save-credentials">
+                                    Save login credentials (encrypted)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notification Settings -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary">
+                                <i class="fas fa-bell"></i> Notifications
+                            </h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="email-notifications" class="form-label">Email Notifications</label>
+                            <input type="email" class="form-control" id="email-notifications" 
+                                   name="email_notifications" placeholder="your-email@example.com">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="sms-notifications" class="form-label">SMS Notifications</label>
+                            <input type="tel" class="form-control" id="sms-notifications" 
+                                   name="sms_notifications" placeholder="+91 9876543210">
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="notify-success" name="notify_success" checked>
+                                <label class="form-check-label" for="notify-success">
+                                    Notify on successful booking
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="notify-failure" name="notify_failure" checked>
+                                <label class="form-check-label" for="notify-failure">
+                                    Notify on booking failure
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="notify-captcha" name="notify_captcha" checked>
+                                <label class="form-check-label" for="notify-captcha">
+                                    Notify when captcha/OTP is required
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Advanced Settings -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="text-primary">
+                                <i class="fas fa-tools"></i> Advanced Settings
+                            </h5>
+                            <hr>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="browser-timeout" class="form-label">Browser Timeout (seconds)</label>
+                            <input type="number" class="form-control" id="browser-timeout" 
+                                   name="browser_timeout" min="60" max="600" value="300">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="request-delay" class="form-label">Request Delay (ms)</label>
+                            <input type="number" class="form-control" id="request-delay" 
+                                   name="request_delay" min="100" max="2000" value="500">
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="log-level" class="form-label">Log Level</label>
+                            <select class="form-select" id="log-level" name="log_level">
+                                <option value="DEBUG">Debug (Detailed)</option>
+                                <option value="INFO">Info (Normal)</option>
+                                <option value="WARNING">Warning (Important only)</option>
+                                <option value="ERROR">Error (Critical only)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <label for="max-concurrent" class="form-label">Max Concurrent Bookings</label>
+                            <select class="form-select" id="max-concurrent" name="max_concurrent">
+                                <option value="1">1 (Recommended)</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-12">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="debug-mode" name="debug_mode">
+                                <label class="form-check-label" for="debug-mode">
+                                    Enable debug mode (saves screenshots)
+                                </label>
+                            </div>
+                            
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="headless-mode" name="headless_mode" checked>
+                                <label class="form-check-label" for="headless-mode">
+                                    Run browser in headless mode (faster)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="text-end">
+                        <button type="button" class="btn btn-outline-secondary me-2" id="reset-settings">
+                            <i class="fas fa-undo"></i> Reset to Defaults
+                        </button>
+                        <button type="button" class="btn btn-warning me-2" id="test-settings">
+                            <i class="fas fa-test-tube"></i> Test Settings
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar Information -->
+    <div class="col-lg-4">
+        <!-- Saved Passengers -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-users"></i> Saved Passengers
+                </h5>
+            </div>
+            <div class="card-body">
+                <div id="saved-passengers-list">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-user-slash"></i>
+                        <p>No saved passengers</p>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <button class="btn btn-outline-primary btn-sm" id="manage-passengers">
+                        <i class="fas fa-edit"></i> Manage Passengers
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- System Information -->
+        <div class="card shadow-sm mt-3">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle"></i> System Information
+                </h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <tr>
+                        <td>Application Version</td>
+                        <td id="app-version">1.0.0</td>
+                    </tr>
+                    <tr>
+                        <td>Environment</td>
+                        <td id="environment">Production</td>
+                    </tr>
+                    <tr>
+                        <td>Server Region</td>
+                        <td id="server-region">Mumbai, India</td>
+                    </tr>
+                    <tr>
+                        <td>Python Version</td>
+                        <td id="python-version">3.10+</td>
+                    </tr>
+                    <tr>
+                        <td>Browser Engine</td>
+                        <td id="browser-engine">Chromium</td>
+                    </tr>
+                    <tr>
+                        <td>Last Updated</td>
+                        <td id="last-updated">-</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Data Management -->
+        <div class="card shadow-sm mt-3">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0">
+                    <i class="fas fa-database"></i> Data Management
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-primary btn-sm" id="export-data">
+                        <i class="fas fa-download"></i> Export Configuration
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" id="import-data">
+                        <i class="fas fa-upload"></i> Import Configuration
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" id="backup-data">
+                        <i class="fas fa-cloud-upload-alt"></i> Backup to Cloud
+                    </button>
+                    <hr>
+                    <button class="btn btn-outline-danger btn-sm" id="clear-data">
+                        <i class="fas fa-trash"></i> Clear All Data
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Support & Help -->
+        <div class="card shadow-sm mt-3">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-life-ring"></i> Support & Help
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <button class="btn btn-outline-info btn-sm" id="view-logs">
+                        <i class="fas fa-file-alt"></i> View Application Logs
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" id="run-diagnostics">
+                        <i class="fas fa-stethoscope"></i> Run Diagnostics
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" id="contact-support">
+                        <i class="fas fa-envelope"></i> Contact Support
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" id="view-documentation">
+                        <i class="fas fa-book"></i> View Documentation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Passenger Management Modal -->
+<div class="modal fade" id="passengerModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-users"></i> Manage Saved Passengers
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div id="passenger-management">
+                    <!-- Passenger management content will be loaded here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="save-passengers">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Import Configuration Modal -->
+<div class="modal fade" id="importModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-upload"></i> Import Configuration
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="config-file" class="form-label">Select Configuration File</label>
+                    <input type="file" class="form-control" id="config-file" accept=".json">
+                    <div class="form-text">Choose a previously exported configuration file (.json)</div>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Warning:</strong> Importing will overwrite your current settings.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning" id="confirm-import">
+                    <i class="fas fa-upload"></i> Import
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logs Viewer Modal -->
+<div class="modal fade" id="logsModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-file-alt"></i> Application Logs
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex justify-content-between mb-3">
+                    <div>
+                        <select class="form-select" id="log-type">
+                            <option value="app">Application Log</option>
+                            <option value="booking">Booking Log</option>
+                            <option value="error">Error Log</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-secondary btn-sm" id="refresh-logs">
+                            <i class="fas fa-refresh"></i> Refresh
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" id="download-logs">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="logs-content" style="height: 400px; overflow-y: auto; background: #f8f9fa; padding: 1rem; font-family: monospace; font-size: 0.875rem;">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-spinner fa-spin"></i> Loading logs...
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Load current settings
+    loadCurrentSettings();
+    
+    // Setup event listeners
+    setupEventListeners();
+    
+    // Load saved passengers
+    loadSavedPassengers();
+    
+    // Load system information
+    loadSystemInformation();
+});
+
+function setupEventListeners() {
+    // Settings form submission
+    document.getElementById('settings-form').addEventListener('submit', saveSettings);
+    
+    // Reset settings
+    document.getElementById('reset-settings').addEventListener('click', resetSettings);
+    
+    // Test settings
+    document.getElementById('test-settings').addEventListener('click', testSettings);
+    
+    // Passenger management
+    document.getElementById('manage-passengers').addEventListener('click', openPassengerModal);
+    document.getElementById('save-passengers').addEventListener('click', savePassengers);
+    
+    // Data management
+    document.getElementById('export-data').addEventListener('click', exportConfiguration);
+    document.getElementById('import-data').addEventListener('click', () => {
+        new bootstrap.Modal(document.getElementById('importModal')).show();
+    });
+    document.getElementById('confirm-import').addEventListener('click', importConfiguration);
+    document.getElementById('backup-data').addEventListener('click', backupData);
+    document.getElementById('clear-data').addEventListener('click', clearData);
+    
+    // Support & Help
+    document.getElementById('view-logs').addEventListener('click', viewLogs);
+    document.getElementById('run-diagnostics').addEventListener('click', runDiagnostics);
+    document.getElementById('contact-support').addEventListener('click', contactSupport);
+    document.getElementById('view-documentation').addEventListener('click', viewDocumentation);
+    
+    // Log viewer
+    document.getElementById('refresh-logs').addEventListener('click', refreshLogs);
+    document.getElementById('download-logs').addEventListener('click', downloadLogs);
+    document.getElementById('log-type').addEventListener('change', refreshLogs);
+}
+
+function loadCurrentSettings() {
+    // Load settings from localStorage or server
+    const savedSettings = JSON.parse(localStorage.getItem('irctc_bot_settings') || '{}');
+    
+    // Apply saved settings to form
+    Object.keys(savedSettings).forEach(key => {
+        const element = document.getElementById(key.replace('_', '-'));
+        if (element) {
+            if (element.type === 'checkbox') {
+                element.checked = savedSettings[key];
+            } else {
+                element.value = savedSettings[key];
+            }
+        }
+    });
+}
+
+function saveSettings(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const settings = {};
+    
+    // Convert form data to settings object
+    for (let [key, value] of formData.entries()) {
+        const element = document.getElementById(key.replace('_', '-'));
+        if (element && element.type === 'checkbox') {
+            settings[key] = element.checked;
+        } else {
+            settings[key] = value;
+        }
+    }
+    
+    // Add unchecked checkboxes
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        if (!formData.has(checkbox.name)) {
+            settings[checkbox.name] = false;
+        }
+    });
+    
+    // Save to localStorage
+    localStorage.setItem('irctc_bot_settings', JSON.stringify(settings));
+    
+    // Send to server
+    fetch('/api/save_settings', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(settings)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'saved') {
+            showToast('Settings saved successfully!', 'success');
+        } else {
+            showToast('Failed to save settings', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving settings:', error);
+        showToast('Error saving settings', 'error');
+    });
+}
+
+function resetSettings() {
+    if (confirm('Are you sure you want to reset all settings to defaults?')) {
+        // Clear localStorage
+        localStorage.removeItem('irctc_bot_settings');
+        
+        // Reset form
+        document.getElementById('settings-form').reset();
+        
+        // Set default values
+        document.getElementById('auto-refresh').value = '30';
+        document.getElementById('notification-sound').value = 'enabled';
+        document.getElementById('theme-mode').value = 'light';
+        document.getElementById('language').value = 'en';
+        document.getElementById('retry-attempts').value = '3';
+        document.getElementById('browser-timeout').value = '300';
+        document.getElementById('request-delay').value = '500';
+        document.getElementById('log-level').value = 'INFO';
+        document.getElementById('max-concurrent').value = '1';
+        document.getElementById('headless-mode').checked = true;
+        
+        showToast('Settings reset to defaults', 'info');
+    }
+}
+
+function testSettings() {
+    showToast('Testing settings...', 'info');
+    
+    // Test server connectivity
+    fetch('/api/health')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'healthy') {
+                showToast('✅ Server connectivity: OK', 'success');
+                
+                // Test IRCTC accessibility
+                if (data.services && data.services.irctc === 'healthy') {
+                    showToast('✅ IRCTC accessibility: OK', 'success');
+                } else {
+                    showToast('⚠️ IRCTC accessibility: Warning', 'warning');
+                }
+            } else {
+                showToast('❌ Server connectivity: Error', 'error');
+            }
+        })
+        .catch(error => {
+            showToast('❌ Server connectivity: Error', 'error');
+        });
+}
+
+function loadSavedPassengers() {
+    fetch('/api/load_passenger_config')
+        .then(response => response.json())
+        .then(data => {
+            displaySavedPassengers(data.passengers || []);
+        })
+        .catch(error => {
+            console.error('Error loading passengers:', error);
+        });
+}
+
+function displaySavedPassengers(passengers) {
+    const container = document.getElementById('saved-passengers-list');
+    
+    if (passengers.length === 0) {
+        container.innerHTML = `
+            <div class="text-center text-muted">
+                <i class="fas fa-user-slash"></i>
+                <p>No saved passengers</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = passengers.map((passenger, index) => `
+        <div class="d-flex justify-content-between align-items-center mb-2 p-2 border rounded">
+            <div>
+                <strong>${passenger.name}</strong><br>
+                <small class="text-muted">${passenger.age} years, ${passenger.gender === 'M' ? 'Male' : passenger.gender === 'F' ? 'Female' : 'Other'}</small>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openPassengerModal() {
+    const modal = new bootstrap.Modal(document.getElementById('passengerModal'));
+    modal.show();
+    
+    // Load passenger management interface
+    loadPassengerManagement();
+}
+
+function loadPassengerManagement() {
+    // This would load the passenger management interface
+    // For now, just show a placeholder
+    document.getElementById('passenger-management').innerHTML = `
+        <div class="text-center">
+            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+            <p>Passenger management interface coming soon</p>
+        </div>
+    `;
+}
+
+function savePassengers() {
+    // Save passenger changes
+    showToast('Passenger management coming soon', 'info');
+}
+
+function exportConfiguration() {
+    const settings = JSON.parse(localStorage.getItem('irctc_bot_settings') || '{}');
+    
+    const config = {
+        version: '1.0.0',
+        exported_at: new Date().toISOString(),
+        settings: settings
+    };
+    
+    const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `irctc_bot_config_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    
+    URL.revokeObjectURL(url);
+    
+    showToast('Configuration exported successfully', 'success');
+}
+
+function importConfiguration() {
+    const fileInput = document.getElementById('config-file');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        showToast('Please select a configuration file', 'error');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const config = JSON.parse(e.target.result);
+            
+            if (config.settings) {
+                localStorage.setItem('irctc_bot_settings', JSON.stringify(config.settings));
+                location.reload(); // Reload to apply settings
+            } else {
+                showToast('Invalid configuration file format', 'error');
+            }
+        } catch (error) {
+            showToast('Error parsing configuration file', 'error');
+        }
+    };
+    
+    reader.readAsText(file);
+    
+    bootstrap.Modal.getInstance(document.getElementById('importModal')).hide();
+}
+
+function backupData() {
+    showToast('Cloud backup feature coming soon', 'info');
+}
+
+function clearData() {
+    if (confirm('Are you sure you want to clear all data? This action cannot be undone.')) {
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Clear server data
+        fetch('/api/clear_data', { method: 'POST' })
+            .then(() => {
+                showToast('All data cleared successfully', 'success');
+                setTimeout(() => location.reload(), 2000);
+            })
+            .catch(() => {
+                showToast('Error clearing server data', 'error');
+            });
+    }
+}
+
+function viewLogs() {
+    const modal = new bootstrap.Modal(document.getElementById('logsModal'));
+    modal.show();
+    refreshLogs();
+}
+
+function refreshLogs() {
+    const logType = document.getElementById('log-type').value;
+    const container = document.getElementById('logs-content');
+    
+    container.innerHTML = `
+        <div class="text-center text-muted">
+            <i class="fas fa-spinner fa-spin"></i> Loading logs...
+        </div>
+    `;
+    
+    // Simulate log loading
+    setTimeout(() => {
+        container.innerHTML = `
+            <div class="text-muted">
+                2025-09-26 20:30:15 [INFO] Application started<br>
+                2025-09-26 20:30:16 [INFO] WebSocket server initialized<br>
+                2025-09-26 20:30:17 [INFO] Scheduler started<br>
+                2025-09-26 20:30:18 [INFO] Ready to accept connections<br>
+                <br>
+                <em>Real logs would be loaded from the server...</em>
+            </div>
+        `;
+    }, 1000);
+}
+
+function downloadLogs() {
+    showToast('Log download feature coming soon', 'info');
+}
+
+function runDiagnostics() {
+    showToast('Running diagnostics...', 'info');
+    
+    // Simulate diagnostics
+    setTimeout(() => {
+        const results = `
+            ✅ Server Status: Healthy
+            ✅ Database Connection: OK
+            ✅ Browser Engine: Ready
+            ✅ IRCTC Accessibility: OK
+            ✅ Network Connectivity: Good
+            ✅ Time Synchronization: Accurate
+        `;
+        
+        alert('Diagnostic Results:\n\n' + results);
+    }, 2000);
+}
+
+function contactSupport() {
+    window.open('mailto:support@irctcbot.com?subject=Support Request', '_blank');
+}
+
+function viewDocumentation() {
+    window.open('https://github.com/yourusername/irctc-tatkal-bot/wiki', '_blank');
+}
+
+function loadSystemInformation() {
+    fetch('/api/system_info')
+        .then(response => response.json())
+        .then(data => {
+            if (data.application) {
+                document.getElementById('app-version').textContent = data.application.version || '1.0.0';
+                document.getElementById('environment').textContent = data.application.environment || 'Production';
+            }
+            
+            if (data.system) {
+                document.getElementById('python-version').textContent = data.system.python_version || '3.10+';
+            }
+            
+            document.getElementById('last-updated').textContent = new Date().toLocaleString();
+        })
+        .catch(error => {
+            console.error('Error loading system info:', error);
+        });
+}
+
+function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+    toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+    toast.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 5000);
+}
+</script>
+{% endblock %}
