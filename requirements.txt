@@ -83,7 +83,6 @@ sphinx==7.2.6
 
 # Deployment
 gunicorn==21.2.0
-nginx-python-module==1.24.0
 
 # Cloud and AWS Support (Optional)
 boto3==1.34.0
