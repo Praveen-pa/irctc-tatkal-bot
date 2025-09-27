@@ -1,5 +1,5 @@
 # Use Playwright’s official image with dependencies preinstalled
-FROM mcr.microsoft.com/playwright/python:1.43.0-focal
+FROM mcr.microsoft.com/playwright/python:latest
 
 # Create and set workdir
 WORKDIR /app
