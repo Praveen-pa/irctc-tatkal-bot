@@ -82,7 +82,7 @@ def health_check():
 def validate_booking():
     """Validate booking configuration"""
     try:
-        booking_data = request.get_json()
+        booking_data = request.get_json(force=True)
         
         if not booking_data:
             return jsonify({'error': 'No booking data provided'}), 400
@@ -113,7 +113,7 @@ def validate_booking():
 def schedule_booking():
     """Schedule a Tatkal booking"""
     try:
-        booking_data = request.get_json()
+        booking_data = request.get_json(force=True)
         
         # Validate booking data
         is_valid, errors = validator.validate_booking_data(booking_data)
@@ -162,7 +162,7 @@ def schedule_booking():
 def start_booking():
     """Start immediate booking"""
     try:
-        booking_data = request.get_json()
+        booking_data = request.get_json(force=True)
         
         # Validate booking data
         is_valid, errors = validator.validate_booking_data(booking_data)
