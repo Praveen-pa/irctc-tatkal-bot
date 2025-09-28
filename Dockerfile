@@ -17,7 +17,7 @@ COPY . .
 EXPOSE 5000
 
 # Create environment file from example
-COPY cp .env.example .env
+COPY .env.example .env
 
 # Start the app
 CMD ["python", "run.py"]
