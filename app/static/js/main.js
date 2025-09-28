@@ -566,6 +566,10 @@ function collectFormData() {
     // Credentials
     formData.username = document.getElementById('username')?.value;
     formData.password = document.getElementById('password')?.value;
+
+    console.log("Username:", formData.username);
+    console.log("Password:", formData.password);
+
     
     // Payment details
     formData.upi_id = document.getElementById('upi-id')?.value;
